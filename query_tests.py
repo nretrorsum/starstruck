@@ -17,7 +17,6 @@ def aws_credentials():
 
 @pytest.fixture
 def setup_dynamodb():
-    """ Фікстура для створення мок-таблиці в DynamoDB """
     with mock_aws():
         dynamodb = boto3.client('dynamodb', region_name='us-west-2')
         dynamodb.create_table(
@@ -76,11 +75,11 @@ def setup_dynamodb():
 
 @pytest.mark.asyncio
 async def test_get_marketplaces_by_seller(setup_dynamodb):
-    """ Тестування отримання списку маркетплейсів для продавця """
+    """ Testing consuming list of marketplaces ID's """
     repo = ActiveBuyersRepository(dynamodb=dynamodb)
     result = await repo.get_marketplaces_by_seller(seller_id='seller_123')
     sum_of_buyers = await repo.get_buyers_by_marketplaces(items = result)
-    logging.info(f'Sum of users{sum_of_buyers}')
+    logging.info(f'Sum of buyers{sum_of_buyers}')
 
     assert result == ['e86cb2f989S944a2b3086af621cf2', 
                       'b1234f989S944a2b3086af621cf3', 
@@ -94,5 +93,5 @@ async def test_get_marketplaces_by_seller(setup_dynamodb):
                       'a12345d6789b0f12c5678e9f34b56789c', 
                       'f12a345b6789c012d2345e6789b9d567f', 
                       'b678a1234f9d5e678b0c123456789f012'], \
-        "Помилка: список маркетплейсів неправильний!"
+        "Error list of marketplaces is wrong!"
     assert sum_of_buyers == 11498037

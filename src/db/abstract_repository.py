@@ -1,9 +1,7 @@
 from abc import ABC
 
+#Abstract repository for database operations
 class AbstractActiveBuyersRepository(ABC):
-    def __init__():
-        pass
-    
     async def get_marketplaces_by_seller():
         raise NotImplementedError
     
